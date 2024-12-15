@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\TopicController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [TopicController::class, "show"])->name("topic.show");
+Route::get('/', function () {
+    return ['Laravel' => app()->version()];
+});
 
-Route::get("/store/topic", [TopicController::class, "store"])->name("topic.store");
+require __DIR__.'/auth.php';
