@@ -28,7 +28,7 @@ class TopicController extends Controller
 
             // Add ha db kun mayda
             Topic::create([
-                "name" => $request->name
+                "name" => $request->name,
             ]);
 
             // Return 200 means OK
@@ -42,4 +42,58 @@ class TopicController extends Controller
             "message" => "Name is required!"
         ], 404);
     }
+
+    public function delete(Request $request)
+    {
+        if ($request->has("delete_id")) {
+
+            $data = Topic::find($request->delete_id);
+
+            if ($data != null) {
+
+                $data->delete();
+
+                return response()->json([
+                    "message" => "Data Deleted!"
+                ], 200);
+            }
+
+            return response()->json([
+                "message" => "Data not found!"
+            ], 403);
+        }
+
+        return response()->json([
+            "message" => "ID is required"
+        ], 404);
+    }
+
+    public function update(Request $request)
+    {
+        if ($request->has("update_id") && $request->has("name")) {
+
+            $data = Topic::find($request->update_id);
+
+            if ($data != null) {
+
+                $data->update([
+                    "name" => $request->name
+                ]);
+
+                return response()->json([
+                    "message" => "Data Updated!"
+                ], 200);
+            }
+
+            return response()->json([
+                "message" => "Data not found!"
+            ], 403);
+        }
+
+        return response()->json([
+            "message" => "ID is required"
+        ], 404);
+    }
+
+    
 }
