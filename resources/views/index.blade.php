@@ -8,17 +8,23 @@
     <title>Document</title>
     <script src="{{ asset("js/bootstrap.bundle.js") }}"></script>
     @vite(["resources/css/app.css"])
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap.bundle.js') }}"></script>
+    <script src="{{ asset('js/dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/sweetalert.js') }}"></script>
 </head>
 
 <body>
     @include("base.navbar")
 
     <div class="custom-container">
-        @include("base.sidenav")
+        @yield("sidenav-content")
         <div class="content">
             @yield("main")
         </div>
     </div>
+
+    @yield("modal")
 </body>
 
 </html>

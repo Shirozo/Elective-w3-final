@@ -2,50 +2,62 @@
 
 @section('navbar-content')
     <div class="topics">
-        <a href="#" class="topic">JS</a>
-        <a href="#" class="topic">CSS</a>
-        <a href="#" class="topic">HTML A</a>
+        @foreach ($topic as $t)
+            <a href="#" class="topic">{{ $t->name }}</a>
+        @endforeach
     </div>
 @endsection
 
 @section('sidenav-content')
-    <h2 id="title">Title Here</h2>
-    <div class="topic-content">
-        <a href="#" class="content-title">A</a>
-        <a href="#" class="content-title">B</a>
-        <a href="#" class="content-title">C</a>
-    </div>
+    <nav class="custom-sidenav">
+        <h2 id="title">{{ $main_topic->name }}</h2>
+        <div class="topic-content">
+            @foreach ($content as $c)
+                <a href="{{ route('t_show') }}?id={{ $t_id }}&c_id={{ $c->id }}"
+                    class="content-title">{{ $c->title }}</a>
+            @endforeach
+        </div>
+    </nav>
 @endsection
 
 @section('main')
-    <form action="">
-        <div class="form-data">
-            <label for="title">Topic Title:</label><br>
-            <input type="text" id="title" name="title" class="form-input">
-        </div>
+    @if ($content_main)
+        <h1>{{ $content_main->title }}</h1>
+        @if ($previousContent)
+            <a href="{{ route('t_show') }}?id={{ $t_id }}&c_id={{ $previousContent->id }}"
+                class="btn btn-success">Previous</a>
+        @endif
 
-        <div class="video-data">
-            <div class="video">
-                <h3>Videos</h3>
-                <iframe width="420" height="315" src="https://www.youtube.com/embed/tgbNymZ7vqY">
-                </iframe>
-                <label for="source">Video Source</label>
-                <input type="text" name="source" id="source">
+        @if ($nextContent)
+            <a href="{{ route('t_show') }}?id={{ $t_id }}&c_id={{ $nextContent->id }}"
+                class="btn btn-flat btn-success" style="float: right">Next</a>
+        @endif
+
+        @if ($content_main->youtube_link1 || $content_main->youtube_link2)
+            <h3 style="margin-top: 40px">Check out this Video Below!</h3>
+            <div class="video-container">
+                @if ($content_main->youtube_link1)
+                    <iframe src="{{ $content_main->youtube_link1 }}" frameborder="0" width="420"
+                        height="245"></iframe>
+                @endif
+
+                @if ($content_main->youtube_link2)
+                    <iframe src="{{ $content_main->youtube_link2 }}" frameborder="0" width="420"
+                        height="245"></iframe>
+                @endif
             </div>
-            <div class="video">
-                <h3>Videos</h3>
-                <iframe width="420" height="315" src="https://www.youtube.com/embed/tgbNymZ7vqY">
-                </iframe>
-                <label for="source">Video Source</label>
-                <input type="text" name="source" id="source">
-            </div>
+        @endif
+
+        <div class="content-data">
+            <h5>Discussion:</h5>
+            <p>
+                {{ $content_main->content }}
+            </p>
         </div>
-        <div class="">
-            <h4>Topic Content</h4>
-            <textarea class="text-content" name="topic-content" id="topic-content" cols="30" rows="10"></textarea>
+    @else
+        <div class="content-main">
+            <h1>Start Learning {{ $main_topic->name }} Now!</h1>
+            <p>Click a topic you want to lear in the left navigation!</p>
         </div>
-        <div class="submit">
-            <button>Submit</button>
-        </div>
-    </form>
+    @endif
 @endsection

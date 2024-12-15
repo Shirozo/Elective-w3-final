@@ -7,8 +7,9 @@
 @endsection
 
 @section('main')
+    <a class="btn btn-flat btn-success" href="{{ route('topic.show') }}">Back</a>
     <div class="table-header">
-        <h1>Topics</h1>
+        <h1>Contents</h1>
         <button onclick="addnew()" class="btn btn-flat btn-sm">Add New</button>
     </div>
     <table id="topicTable">
@@ -20,13 +21,13 @@
             @csrf
         </thead>
         <tbody>
-            @foreach ($topic as $t)
+            @foreach ($data as $d)
                 <tr>
-                    <td>{{ $t->name }}</td>
+                    <td>{{ $d->title }}</td>
                     <td>
-                        <a class="btn option-button" style="color: white" href="{{ route('content.show') }}?q={{ $t->id }}">View</a>
-                        <button class="btn option-button" onclick="updateThis('{{ $t->id }}', '{{ $t->name }}')">Update</button>
-                        <button class="btn option-button delete" onclick="deleteThis('{{ $t->id }}')">Delete</button>
+                        <button class="option-button"
+                            onclick="updateThis('{{ $d->id }}')">Update</button>
+                        <button class="option-button delete" onclick="deleteThis('{{ $d->id }}')">Delete</button>
                     </td>
                 </tr>
             @endforeach
@@ -41,16 +42,20 @@
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('topic.store') }}",
+                    url: "{{ route('content.store') }}",
                     data: {
-                        name: $("#topic").val(),
+                        title: $("#title").val(),
+                        youtube_link1: $("#v1").val(),
+                        youtube_link2: $("#v2").val(),
+                        content: $("#content").val(),
+                        id: $("#id").val(),
                         _token: "{{ csrf_token() }}"
                     },
                     dataType: 'json',
                     success: function(response) {
                         Swal.fire({
                             title: "Success!",
-                            text: "Topic Added!",
+                            text: "Content Added!",
                             icon: "success"
                         }).then(() => {
                             window.location.reload();
@@ -59,7 +64,7 @@
                     error: function(err) {
                         swal({
                             title: "Error",
-                            text: errr.responseJSON.message,
+                            text: err.responseJSON.message,
                             icon: "error",
                             button: "Close"
                         })
@@ -71,7 +76,7 @@
                 e.preventDefault();
                 $.ajax({
                     type: "DELETE",
-                    url: "{{ route('topic.delete') }}",
+                    url: "{{ route('content.delete') }}",
                     data: {
                         delete_id: $("#delete_id").val(),
                         _token: "{{ csrf_token() }}"
@@ -87,7 +92,7 @@
                         })
                     },
                     error: function(err) {
-                        swal({
+                        Swal.fire({
                             title: "Error",
                             text: errr.responseJSON.message,
                             icon: "error",
@@ -97,14 +102,17 @@
                 })
             })
 
-            $("#updateTopic").on("submit", function(e) {
+            $("#updateContent").on("submit", function(e) {
                 e.preventDefault();
                 $.ajax({
                     type: "PUT",
-                    url: "{{ route('topic.update') }}",
+                    url: "{{ route('content.update') }}",
                     data: {
-                        update_id: $("#update_id").val(),
-                        name: $("#up_topic").val(),
+                        title: $("#update_title").val(),
+                        youtube_link1: $("#update_v1").val(),
+                        youtube_link2: $("#update_v2").val(),
+                        content: $("#update_content").val(),
+                        id: $("#update_id").val(),
                         _token: "{{ csrf_token() }}"
                     },
                     dataType: 'json',
@@ -118,9 +126,9 @@
                         })
                     },
                     error: function(err) {
-                        swal({
+                        Swal.fire({
                             title: "Error",
-                            text: errr.responseJSON.message,
+                            text: err.responseJSON.message,
                             icon: "error",
                             button: "Close"
                         })
@@ -139,17 +147,29 @@
         }
 
 
-        function updateThis(id, name) {
-            $('#updateModal').modal("show")
+        function updateThis(id) {
             $("#update_id").val(id)
-            $("#up_topic").val(name)
+            $.ajax({
+                type: "GET",
+                url: "{{ route('content.api') }}",
+                data: {
+                    id: id
+                },
+                success: function(response) {
+                    $("#update_title").val(response.data.title),
+                    $("#update_v1").val(response.data.youtube_link1),
+                    $("#update_v2").val(response.data.youtube_link2),
+                    $("#update_content").val(response.data.content)
+                }
+            })
+            $('#updateModal').modal("show")
         }
     </script>
 @endsection
 
 @section('modal')
     <div class="modal fade" id="addModal">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
             <form class="modal-content" method="POST" action="{{ route('topic.store') }}" id="addTopic">
                 <div class="modal-header">
                     <h5 class="modal-title">Add Topic</h5>
@@ -157,10 +177,29 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <input type="hidden" name="id" id="id" value="{{ $id }}">
                 <div class="modal-body">
-                    <label for="topic">Topic:</label>
-                    <input type="text" required placeholder="Topic Name" id="topic" name="topic"
-                        class="form-control">
+                    <div class="form-group has-feedback">
+                        <label for="title">Title:</label>
+                        <input type="text" required placeholder="Title" id="title" name="title"
+                            class="form-control">
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="v1">Video Link 1:</label>
+                        <input type="url" placeholder="Source" id="v1" name="v1"
+                            class="form-control">
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="v2">Video Link 2:</label>
+                        <input type="url" placeholder="Source" id="v2" name="v2"
+                            class="form-control">
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="content">Content:</label>
+                        <textarea required placeholder="Content" id="content" name="content"
+                            class="form-control">
+                        </textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -180,20 +219,21 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <h4>ARE YOU SURE YOU WANT TO DELETE THIS TOPIC?</h4>
+                    <h4>ARE YOU SURE YOU WANT TO DELETE THIS CONTENT?</h4>
                     <input type="hidden" id="delete_id" name="delete_id" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Delete</button>
-                    <button type="button" class="btn btn-secondary" onclick="$('#deleteModal').modal('hide')">Close</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="$('#deleteModal').modal('hide')">Close</button>
                 </div>
             </form>
         </div>
     </div>
 
     <div class="modal fade" id="updateModal">
-        <div class="modal-dialog" role="document">
-            <form class="modal-content" method="POST" action="{{ route('topic.update') }}" id="updateTopic">
+        <div class="modal-dialog modal-lg" role="document">
+            <form class="modal-content" method="POST" action="{{ route('topic.update') }}" id="updateContent">
                 <div class="modal-header">
                     <h5 class="modal-title">Update Topic</h5>
                     <button type="button" class="close" onclick="$('#updateModal').modal('hide')">
@@ -201,14 +241,33 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <label for="topic">Topic:</label>
-                    <input type="hidden" id="update_id" name="update_id" class="form-control">
-                    <input type="text" required placeholder="Topic Name" id="up_topic" name="up_topic"
-                        class="form-control">
+                    <input type="hidden" name="update_id" id="update_id">
+                    <div class="form-group has-feedback">
+                        <label for="update_title">Title:</label>
+                        <input type="text" required placeholder="Title" id="update_title" name="update_title"
+                            class="form-control">
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="update_v1">Video Link 1:</label>
+                        <input type="url" placeholder="Source" id="update_v1" name="update_v1"
+                            class="form-control">
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="update_v2">Video Link 2:</label>
+                        <input type="url" placeholder="Source" id="update_v2" name="update_v2"
+                            class="form-control">
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label for="update_content">Content:</label>
+                        <textarea required placeholder="Content" id="update_content" name="update_content"
+                            class="form-control">
+                        </textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Add</button>
-                    <button type="button" class="btn btn-secondary" onclick="$('#updateModal').modal('hide')">Close</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="button" class="btn btn-secondary"
+                        onclick="$('#updateModal').modal('hide')">Close</button>
                 </div>
             </form>
         </div>
