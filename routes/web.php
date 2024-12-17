@@ -5,7 +5,7 @@ use App\Http\Controllers\TopicContentController;
 use App\Http\Controllers\TopicController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [IndexController::class, "content"])->name("show");
+Route::get('/', [IndexController::class, "content"])->name("index");
 
 Route::get("/learn", [IndexController::class, "topicShow"])->name("t_show");
 

@@ -2,7 +2,7 @@
 
 @section('navbar-content')
     <div class="topics">
-        <b>Admin Panel</b>
+        <b style="width:100px !important;"><a href="{{ route('index') }}" class="topic">W3 Clone</a></b>
     </div>
 @endsection
 
