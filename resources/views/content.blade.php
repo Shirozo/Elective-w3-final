@@ -3,7 +3,7 @@
 @section('navbar-content')
     <div class="topics">
         @foreach ($topic as $t)
-            <a href="#" class="topic">{{ $t->name }}</a>
+            <a href="{{ route('t_show', ['id' => $t->id]) }}" class="topic">{{ $t->name }}</a>
         @endforeach
     </div>
 @endsection

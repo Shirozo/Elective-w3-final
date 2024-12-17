@@ -15,7 +15,9 @@
 </head>
 
 <body>
-    @include("base.navbar")
+    <nav class="custom-navbar">
+        @yield("navbar-content")
+    </nav>
 
     <div class="custom-container">
         @yield("sidenav-content")
