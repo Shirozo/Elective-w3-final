@@ -15,7 +15,7 @@ class IndexController extends Controller
         $topic = Topic::all();
 
         return view("landing", [
-            "topic" => $topic
+            "topics" => $topic
         ]);
     }
 
