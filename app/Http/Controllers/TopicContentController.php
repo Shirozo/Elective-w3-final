@@ -20,7 +20,6 @@ class TopicContentController extends Controller
     public function store(Request $request) {
         $data = Validator::make($request->all(), [
             "title" => "required|min:1",
-            "content" => "required",
             "id" => "required"
         ]);
 
@@ -32,9 +31,6 @@ class TopicContentController extends Controller
 
         Content::create([
             "title" => $request->title,
-            "youtube_link1" => $request->v1,
-            "youtube_link2" => $request->v2,
-            "content" => $request->content,
             "topic_id" => $request->id
         ]);
 
@@ -71,7 +67,6 @@ class TopicContentController extends Controller
     public function update(Request $request) {
         $data = Validator::make($request->all(), [
             "title" => "required|min:1",
-            "content" => "required",
             "id" => "required"
         ]);
 
@@ -86,9 +81,6 @@ class TopicContentController extends Controller
 
         $instance->update([
             "title" => $request->title,
-            "youtube_link1" => $request->youtube_link1,
-            "youtube_link2" => $request->youtube_link2,
-            "content" => $request->content,
         ]);
 
         return response()->json([
