@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Content;
+use App\Models\Subcontent;
 use App\Models\Topic;
 use Illuminate\Http\Request;
 
@@ -21,7 +22,21 @@ class IndexController extends Controller
 
     public function topicShow(Request $request)
     {
+        $contents = Content::where("topic_id", "=", $request->id)->get();
 
+        $sidenav = "";
+
+        foreach ($contents as $c) {
+            $subcontent = Subcontent::where("content_id", "=", $c->id)->get();
+            $sidenav .= '<h2 id="title">' . $c->title . '</h2><div class="topic-content">';
+
+            foreach ($subcontent as $s) {
+                $sidenav .= "<a href='" . route('t_show') . "?id=$request->id&c_id=$c->id' class='content-title'>$s->title</a>";
+            }
+
+            $sidenav .= "</div>";
+        }
+        
         $topic = Topic::all();
         $main_topic = Topic::find($request->id);
         $content = Content::where("topic_id", "=", $request->id)->get();
@@ -44,6 +59,7 @@ class IndexController extends Controller
         }
 
         return view("content", [
+            "sidenav" => $sidenav,
             "topic" => $topic,
             "main_topic" => $main_topic,
             "content" => $content,
