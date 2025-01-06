@@ -2,6 +2,7 @@
 
 @section('navbar-content')
     <div class="topics">
+        <a href="{{ route('index') }}" class="topic">W3 Clone</a>
         @foreach ($topic as $t)
             <a href="{{ route('t_show', ['id' => $t->id]) }}" class="topic">{{ $t->name }}</a>
         @endforeach
@@ -10,13 +11,7 @@
 
 @section('sidenav-content')
     <nav class="custom-sidenav">
-        <h2 id="title">{{ $main_topic->name }}</h2>
-        <div class="topic-content">
-            @foreach ($content as $c)
-                <a href="{{ route('t_show') }}?id={{ $t_id }}&c_id={{ $c->id }}"
-                    class="content-title">{{ $c->title }}</a>
-            @endforeach
-        </div>
+       {!! $sidenav !!}
     </nav>
 @endsection
 
@@ -51,7 +46,7 @@
         <div class="content-data">
             <h5>Discussion:</h5>
             <p>
-                {{ $content_main->content }}
+                {!! $content_main->content !!}
             </p>
         </div>
     @else
