@@ -3,6 +3,7 @@
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\TopicContentController;
 use App\Http\Controllers\TopicController;
+use App\Http\Controllers\TopicSubContentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, "content"])->name("index");
@@ -29,6 +30,18 @@ Route::group(["prefix" => "content", "as" => "content."], function() {
     Route::put("/update", [TopicContentController::class, "update"])->name("update");
 
     Route::get("/api", [TopicContentController::class, "api"])->name("api");
+});
+
+Route::group(["prefix" => "subcontent", "as" => "subcontent."], function() {
+    Route::get("/topic/{topic}/content/{content}", [TopicSubContentController::class, "show"])->name("show");
+
+    Route::post("/store", [TopicSubContentController::class, "store"])->name("store");
+
+    Route::delete("/delete", [TopicSubContentController::class, "delete"])->name("delete");
+
+    Route::put("/update", [TopicSubContentController::class, "update"])->name("update");
+
+    Route::get("/api", [TopicSubContentController::class, "api"])->name("api");
 });
 
 
