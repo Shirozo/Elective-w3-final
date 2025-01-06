@@ -19,12 +19,12 @@
     @if ($content_main)
         <h1>{{ $content_main->title }}</h1>
         @if ($previousContent)
-            <a href="{{ route('t_show') }}?id={{ $t_id }}&c_id={{ $previousContent->id }}"
+            <a href="{{ route('t_show') }}?id={{ $t_id }}&s_id={{ $previousContent->id }}"
                 class="btn btn-success">Previous</a>
         @endif
 
         @if ($nextContent)
-            <a href="{{ route('t_show') }}?id={{ $t_id }}&c_id={{ $nextContent->id }}"
+            <a href="{{ route('t_show') }}?id={{ $t_id }}&s_id={{ $nextContent->id }}"
                 class="btn btn-flat btn-success" style="float: right">Next</a>
         @endif
 
@@ -46,7 +46,7 @@
         <div class="content-data">
             <h5>Discussion:</h5>
             <p>
-                {!! $content_main->content !!}
+                {!! $subcontent->content !!}
             </p>
         </div>
     @else

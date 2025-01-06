@@ -31,28 +31,29 @@ class IndexController extends Controller
             $sidenav .= '<h2 id="title">' . $c->title . '</h2><div class="topic-content">';
 
             foreach ($subcontent as $s) {
-                $sidenav .= "<a href='" . route('t_show') . "?id=$request->id&c_id=$c->id' class='content-title'>$s->title</a>";
+                $sidenav .= "<a href='" . route('t_show') . "?id=$request->id&s_id=" . $s->id . "'class='content-title'>$s->title</a>";
             }
 
-            $sidenav .= "</div>";
+            $sidenav .= "</div>";   
         }
         
         $topic = Topic::all();
         $main_topic = Topic::find($request->id);
-        $content = Content::where("topic_id", "=", $request->id)->get();
+
+        $subcontent = Subcontent::find($request->s_id);
 
         $content_main = null;
         $previousContent = null;
         $nextContent = null;
 
-        if ($request->has("c_id")) {
-            $content_main = Content::find($request->c_id);
-            $previousContent = Content::where("topic_id", "=", $request->id)
+        if ($request->has("s_id")) {
+            $content_main = Subcontent::find($request->s_id);
+            $previousContent = Subcontent::where("topic_id", "=", $content_main->topic_id)
                 ->where("id", "<", $content_main->id)
                 ->orderBy("id", "desc")
                 ->first();
 
-            $nextContent = Content::where("topic_id", "=", $request->id)
+            $nextContent = Subcontent::where("topic_id", "=", $content_main->topic_id)
                 ->where("id", ">", $content_main->id)
                 ->orderBy("id", "asc")
                 ->first();
@@ -62,7 +63,7 @@ class IndexController extends Controller
             "sidenav" => $sidenav,
             "topic" => $topic,
             "main_topic" => $main_topic,
-            "content" => $content,
+            "subcontent" => $subcontent,
             "content_main" => $content_main,
             "t_id" => $request->id,
             "previousContent" => $previousContent,

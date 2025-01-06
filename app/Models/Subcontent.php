@@ -13,5 +13,6 @@ class Subcontent extends Model
         "youtube_link2",
         "content",
         "content_id",
+        "topic_id"
     ];
 }

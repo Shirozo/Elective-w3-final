@@ -7,7 +7,7 @@
 @endsection
 
 @section('main')
-    <a class="btn btn-flat btn-success" href="{{ route('content.show') }}?q={{ $content }}">Back</a>
+    <a class="btn btn-flat btn-success" href="{{ route('content.show') }}?q={{ $topic }}">Back</a>
     <div class="table-header">
         <h1>Sub Contents</h1>
         <button onclick="addnew()" class="btn btn-flat btn-sm">Add New</button>
@@ -15,14 +15,19 @@
     <table id="topicTable">
         <thead>
             <tr>
+                <th style="width: 2%" style="text-align: center">No.</th>
                 <th>Name</th>
                 <th style="width: 40%">Action</th>
             </tr>
             @csrf
         </thead>
+        <?php
+            $c = 1; 
+        ?>
         <tbody>
             @foreach ($data as $d)
                 <tr>
+                    <td style="text-align: center">{{ $c }}</td>
                     <td>{{ $d->title }}</td>
                     <td>
                         <button class="option-button"
@@ -30,6 +35,9 @@
                         <button class="option-button delete" onclick="deleteThis('{{ $d->id }}')">Delete</button>
                     </td>
                 </tr>
+                <?php
+                $c += 1; 
+            ?>
             @endforeach
         </tbody>
     </table>
@@ -49,6 +57,7 @@
                         youtube_link2: $("#v2").val(),
                         content: $("#content").val(),
                         id: $("#id").val(),
+                        t_id: "{{ $topic }}",
                         _token: "{{ csrf_token() }}"
                     },
                     dataType: 'json',
@@ -113,6 +122,7 @@
                         youtube_link2: $("#update_v2").val(),
                         content: $("#update_content").val(),
                         id: $("#update_id").val(),
+                        t_id: "{{ $topic }}",
                         _token: "{{ csrf_token() }}"
                     },
                     dataType: 'json',

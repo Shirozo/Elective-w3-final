@@ -69,7 +69,7 @@ a {
 
 .custom-sidenav {
     background-color: #E7E9EB;
-    width: 10vw;
+    width: 14vw;
     height: 96vh;
 }
 
@@ -237,7 +237,7 @@ td {
     text-decoration: none;
     color: black;
     padding: 5px 20px;
-    width: 100px;
+    width: 150px;
     border-radius: 999px;
     text-align: center;
     transition: all .5s ease-in-out;

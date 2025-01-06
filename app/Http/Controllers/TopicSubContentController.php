@@ -40,7 +40,8 @@ class TopicSubContentController extends Controller
             "youtube_link1" => $request->v1,
             "youtube_link2" => $request->v2,
             "content" => $request->content,
-            "content_id" => $request->id
+            "content_id" => $request->id,
+            "topic_id" => $request->t_id
         ]);
 
         return response()->json([
@@ -93,7 +94,7 @@ class TopicSubContentController extends Controller
             "title" => $request->title,
             "youtube_link1" => $request->youtube_link1,
             "youtube_link2" => $request->youtube_link2,
-            "content_id" => $request->content,
+            "content" => $request->content,
         ]);
 
         return response()->json([
